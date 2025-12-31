@@ -76,6 +76,11 @@ In Anki:
 5. Name it `MasterRank`
 6. Repeat for each note type used by the decks listed in the previous step.
 
+You can also locate the note types from Tools > Manage Note Types.
+
+Note: if the field is missing from a relevant note type, the script will inform
+you and exit without making changes.
+
 ## usage
 
 ### backup (recommended)
