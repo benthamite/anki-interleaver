@@ -8,8 +8,8 @@ ANKI_CONNECT_URL = "http://127.0.0.1:8765"
 
 # Put your real deck names here.
 DECK_NAMES = [
-    "aaa1",
-    "aaa2",
+    "deck1",
+    "deck2",
 ]
 
 # The field to write the final global order into.
