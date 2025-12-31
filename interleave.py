@@ -135,8 +135,9 @@ def main():
 
     # Step 4: Remind user to reposition manually.
     if not UPDATE_CARD_DUE:
+        deck_disjunction = " OR ".join([f'deck:"{d}"' for d in DECK_NAMES])
         print("\n[SUCCESS] Script finished. Now, please reposition cards manually in Anki.")
-        print("1. Browse for the decks.")
+        print(f"Paste this in your browser: {deck_disjunction}")
         print("2. Sort by the 'MasterRank' column.")
         print("3. Select all cards and use 'Cards -> Reposition'.")
     else:
