@@ -67,7 +67,7 @@ DECK_NAMES = [
 
 1. In Anki, go to Tools > Manage Note Types
 2. Select a note type used by one of the decks you listed above
-3. Click **Fields...**
+3. Click **Fields**
 4. Click **Add**
 5. Name it `MasterRank`
 6. Check the "Sort by this field in the browser" option.
