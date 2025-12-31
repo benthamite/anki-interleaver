@@ -74,6 +74,7 @@ In Anki:
 3. Click **Fields...**
 4. Click **Add**
 5. Name it `MasterRank`
+6. Check the "Sort by this field in the browser" option.
 6. Repeat for each note type used by the decks listed in the previous step.
 
 You can also locate the note types from Tools > Manage Note Types.
@@ -102,20 +103,21 @@ processed.
 
 ### apply the order in Anki
 
-1. In Anki, open **Browse**
-2. Search for the decks you interleaved (example):
+1. In the main Anki window, click **Browse**.
+2. Search for all new cards within the decks you interleaved. Example:
 
-   `deck:"Main::Japanese" or deck:"Main::Swedish"`
-
-3. Click the **Fields** button and enable `MasterRank`.
-4. In the popup, you will see a list of fields. Locate the `MasterRank` field,
-   select it, and then check the "Sort by this field in the browser" option.
-4. Click the `MasterRank` column header to sort ascending.
-5. Select all cards (`Cmd+A` on macOS).
-6. Choose **Cards → Reposition…**
-7. Use:
+   `is:new (deck:"Main::Japanese" or deck:"Main::Swedish")`
+   
+   (The script will output the exact text you need to paste.)
+3. Sort the cards by 'Sort Field' (if it doesn't show up, right-click on the column
+   headers and enable it).
+4. Select all cards (Cmd/Ctrl + A).
+5. Choose **Cards → Reposition…**
+6. Use:
    - Start position: `1`
    - Step: `1`
+   - Randomize order: unchecked
+   - Shift positions of existing cards: unchecked
 
 ## notes on ordering
 
