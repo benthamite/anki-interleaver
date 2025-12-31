@@ -39,15 +39,13 @@ At a high level, `interleave.py`:
 - Python 3
 - Python dependency: `requests`
 
-## installation
+## setup (one-time)
 
-Clone this repo and install dependencies:
+### clone the repo
 
 ```bash
-pip install requests
+git clone https://github.com/tlon-team/anki-interleaver
 ```
-
-## setup (one-time)
 
 ### configure the Python script
 
