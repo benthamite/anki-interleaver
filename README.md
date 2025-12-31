@@ -9,14 +9,7 @@ you start making progress in another. Instead, you get a combined “master”
 ordering that keeps you moving through each deck at roughly the same pace
 (proportional to how many new cards each deck contains).
 
-This is especially useful when you have (for example):
-
-- Deck 1 with 4000 new cards
-- Deck 2 with 2000 new cards
-
-…and you want the global order to behave like a 2:1 interleaving:
-
-- D1[1], D1[2], D2[1], D1[3], D1[4], D2[2], …
+<provide example here>
 
 ## what the script does
 
@@ -31,8 +24,6 @@ At a high level, `interleave.py`:
    sort in the Anki browser.
 5. You then perform the final “Cards → Reposition…” step manually in Anki,
    sorted by `MasterRank`.
-
-The script does **not** rely on a manually maintained per-deck position field.
 
 ## requirements
 
@@ -49,26 +40,9 @@ Clone this repo and install dependencies:
 pip install requests
 ```
 
-## setup in Anki (one-time)
+## setup (one-time)
 
-### 1) create the `MasterRank` note field
-
-`MasterRank` must be a **note field** (not a browser column).
-
-In Anki:
-
-1. Open **Browse**
-2. Select a note of the note type(s) you use in the target decks
-3. Click **Fields...**
-4. Click **Add**
-5. Name it `MasterRank`
-6. Repeat for each note type used by the decks you’ll interleave (if you have
-   multiple note types)
-
-If a deck contains multiple note types, you must add `MasterRank` to all of
-them, otherwise those notes cannot be updated consistently.
-
-## configuration
+### configure the Python script
 
 Open `interleave.py` and set the list of deck names:
 
@@ -79,15 +53,29 @@ Example:
 
 ```python
 DECK_NAMES = [
-    "Main::Started::known_kanji",
-    "Main::Started::8000+ most common swedish words",
+    "Main::Japanese",
+    "Main::Swedish",
 ]
 ```
 
-If you change the `MasterRank` field name, also update `MASTERRANK_FIELD`
-accordingly.
+### create the `MasterRank` note field
+
+In Anki:
+
+1. Open **Browse**
+2. Select a note of the note type(s) you use in the target decks
+3. Click **Fields...**
+4. Click **Add**
+5. Name it `MasterRank`
+6. Repeat for each note type used by the decks listed in the previous step.
 
 ## usage
+
+### backup (recommended)
+
+<describe how to do a backup>
+
+### run the script
 
 1. Open Anki (AnkiConnect must be running; keep Anki open).
 2. Run:
@@ -99,44 +87,9 @@ python interleave.py
 When it finishes, it will have updated the `MasterRank` field on the notes it
 processed.
 
-### apply the order in Anki (manual step)
+### apply the order in Anki
 
-Because AnkiConnect support differs across setups, the script is designed to
-avoid repositioning via the API. Instead:
-
-1. In Anki, open **Browse**
-2. Search for your target decks, e.g.:
-
-   `deck:"Deck 1" or deck:"Deck 2"`
-
-3. Add the `MasterRank` column in the browser (see below)
-4. Sort by `MasterRank` ascending
-5. Select all matching cards
-6. Menu: **Cards → Reposition...**
-7. Use:
-   - Start position: `1`
-   - Step: `1`
-
-After repositioning, studying new cards from the combined selection (for
-example, a parent deck that includes the subdecks, or a filtered deck) will
-follow that interleaved order.
-
-## how to show `MasterRank` in the Anki browser
-
-`MasterRank` is a note field, but it can still be shown as a browser column.
-
-In the **Browse** window:
-
-1. Click the column chooser (or right-click on a column header).
-2. Choose **Fields** / **Columns** (wording varies by version).
-3. Add the `MasterRank` field as a column.
-4. Sort by clicking the `MasterRank` column header.
-
-If you don’t see `MasterRank` in the list, check:
-
-- You added the field to the note type currently shown in the browser
-- You are browsing notes/cards that actually use a note type that contains
-  `MasterRank`
+<the steps are Tools -> Manage Note Types -> select the note type used by the deck -> Fields -> select a field -> Sort by this field in the browser>
 
 ## notes on ordering
 
@@ -177,17 +130,6 @@ This generalizes to any number of decks.
 You almost certainly did not add the `MasterRank` field to the note type(s)
 being displayed.
 
-## safety
-
-This script updates note fields (`MasterRank`). It does not delete notes/cards.
-
-Still, it is recommended that you:
-
-- Sync Anki before running it
-- Make a backup (File → Export / or copy your collection) before applying
-  large-scale changes
-
 ## license
 
-Choose a license (MIT recommended) and add it as `LICENSE` if you intend others
-to reuse/modify the script.
+<use MIT license>
