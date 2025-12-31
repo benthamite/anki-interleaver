@@ -131,10 +131,8 @@ def main():
 
     # Step 4: Remind user to reposition manually.
     deck_disjunction = " OR ".join([f'deck:"{d}"' for d in DECK_NAMES])
-    print("\n[SUCCESS] Script finished. Now, please reposition cards manually in Anki.")
-    print(f"Paste this in your browser: is:new ({deck_disjunction})")
-    print("2. Sort by the 'MasterRank' column.")
-    print("3. Select all cards and use 'Cards -> Reposition'.")
+    print("\n[SUCCESS] Script finished. Please following the instructions in the \"apply the order in Anki\" section of theREADME file. The text you need to paste in the search bar of the note browser has been copied to the clipboard:")
+    print(f"is:new ({deck_disjunction})")
 
 
 if __name__ == "__main__":

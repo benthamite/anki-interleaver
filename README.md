@@ -106,7 +106,8 @@ processed.
 
    `is:new (deck:"Main::Japanese" OR deck:"Main::Swedish")`
 
-   (The script will output the exact text you need to paste.)
+   (The script will output and copy to the clipboard the exact text you need to
+   paste.)
 3. Sort the cards by 'Sort Field' (if it doesn't show up, right-click on the column
    headers and enable it).
 4. Select all cards (Cmd/Ctrl + A).
