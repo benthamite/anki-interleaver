@@ -97,17 +97,14 @@ processed.
 
 ### apply the order in Anki
 
-Because AnkiConnect capabilities vary (and some installations do not support
-repositioning actions via the API), the final “reposition” step is done manually:
-
 1. In Anki, open **Browse**
 2. Search for the decks you interleaved (example):
 
    `deck:"Main::Japanese" or deck:"Main::Swedish"`
 
-3. Add the `MasterRank` column:
-   - In the Browse window, click the **Fields** button (or **Columns**, depending
-     on your Anki version), and enable `MasterRank`.
+3. Click the **Fields** button and enable `MasterRank`.
+4. In the popup, you will see a list of fields. Locate the `MasterRank` field,
+   select it, and then check the "Sort by this field in the browser" option.
 4. Click the `MasterRank` column header to sort ascending.
 5. Select all cards (`Cmd+A` on macOS).
 6. Choose **Cards → Reposition…**
