@@ -43,6 +43,33 @@ def main():
 
     print("Connecting to AnkiConnect...")
 
+    # Preflight: ensure the MasterRank field exists on all note types used in the
+    # relevant decks before doing any updates.
+    print(f"\n--- Preflight: checking '{MASTERRANK_FIELD}' field exists ---")
+    decks_query = " or ".join([f'deck:"{d}"' for d in DECK_NAMES])
+    note_ids = anki_invoke("findNotes", query=decks_query)
+    if not note_ids:
+        print("No notes found in the specified decks.")
+        sys.exit(0)
+
+    notes_info = anki_invoke("notesInfo", notes=note_ids)
+
+    models_missing_field = set()
+    for note in notes_info:
+        model_name = note.get("modelName")
+        fields = note.get("fields", {})
+        if model_name and MASTERRANK_FIELD not in fields:
+            models_missing_field.add(model_name)
+
+    if models_missing_field:
+        missing = ", ".join(sorted(models_missing_field))
+        raise RuntimeError(
+            f"Missing required note field '{MASTERRANK_FIELD}' on note types: {missing}. "
+            "Add the field in Anki (Browse → select a note → Fields… → Add) and re-run."
+        )
+
+    print(f"OK: '{MASTERRANK_FIELD}' exists on all relevant note types.")
+
     # Step 1: For each deck, get its list of new cards in their default Anki order.
     processed_decks = []
     total_new = 0
@@ -82,12 +109,9 @@ def main():
     # Step 3: Write MasterRank to notes. This requires mapping cards back to their notes.
     # We build a map of Card ID -> Note ID. This is robust against broken cardsInfo.
     print("Building Card ID to Note ID map...")
-    all_notes_query = " or ".join([f'deck:"{d}"' for d in DECK_NAMES])
-    all_note_ids = anki_invoke("findNotes", query=all_notes_query)
-    all_notes_info = anki_invoke("notesInfo", notes=all_note_ids)
-    
+
     cid_to_nid_map = {}
-    for note in all_notes_info:
+    for note in notes_info:
         for cid in note.get('cards', []):
             cid_to_nid_map[cid] = note['noteId']
 
