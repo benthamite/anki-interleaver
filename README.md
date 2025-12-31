@@ -9,7 +9,14 @@ you start making progress in another. Instead, you get a combined “master”
 ordering that keeps you moving through each deck at roughly the same pace
 (proportional to how many new cards each deck contains).
 
-<provide example here>
+Example (Deck 1 has 4 new cards, Deck 2 has 2 new cards):
+
+- Deck 1: D1[1], D1[2], D1[3], D1[4]
+- Deck 2: D2[1], D2[2]
+
+The resulting interleaving will be approximately 2:1:
+
+- D1[1], D1[2], D2[1], D1[3], D1[4], D2[2]
 
 ## what the script does
 
@@ -73,7 +80,13 @@ In Anki:
 
 ### backup (recommended)
 
-<describe how to do a backup>
+Before running the script on a large collection, make a backup of your Anki
+collection:
+
+1. In Anki, go to **File → Export…**
+2. Choose **Anki Deck Package (*.apkg)**
+3. Check **Include scheduling information**
+4. Export to a safe location
 
 ### run the script
 
@@ -89,7 +102,23 @@ processed.
 
 ### apply the order in Anki
 
-<the steps are Tools -> Manage Note Types -> select the note type used by the deck -> Fields -> select a field -> Sort by this field in the browser>
+Because AnkiConnect capabilities vary (and some installations do not support
+repositioning actions via the API), the final “reposition” step is done manually:
+
+1. In Anki, open **Browse**
+2. Search for the decks you interleaved (example):
+
+   `deck:"Main::Japanese" or deck:"Main::Swedish"`
+
+3. Add the `MasterRank` column:
+   - In the Browse window, click the **Fields** button (or **Columns**, depending
+     on your Anki version), and enable `MasterRank`.
+4. Click the `MasterRank` column header to sort ascending.
+5. Select all cards (`Cmd+A` on macOS).
+6. Choose **Cards → Reposition…**
+7. Use:
+   - Start position: `1`
+   - Step: `1`
 
 ## notes on ordering
 
@@ -130,6 +159,9 @@ This generalizes to any number of decks.
 You almost certainly did not add the `MasterRank` field to the note type(s)
 being displayed.
 
+If you’re browsing multiple note types at once, ensure the note type(s) used by
+the target decks include a `MasterRank` field.
+
 ## license
 
-<use MIT license>
+MIT
