@@ -15,10 +15,6 @@ DECK_NAMES = [
 # The field to write the final global order into.
 MASTERRANK_FIELD = "MasterRank"
 
-# Set to False to prevent the script from trying (and failing) to reposition cards.
-# You will still need to do the manual reposition step in Anki after running this.
-UPDATE_CARD_DUE = False
-
 # ------------------------------------------------
 
 
@@ -134,15 +130,11 @@ def main():
     print("\nMasterRank field updated.")
 
     # Step 4: Remind user to reposition manually.
-    if not UPDATE_CARD_DUE:
-        deck_disjunction = " OR ".join([f'deck:"{d}"' for d in DECK_NAMES])
-        print("\n[SUCCESS] Script finished. Now, please reposition cards manually in Anki.")
-        print(f"Paste this in your browser: is:new ({deck_disjunction})")
-        print("2. Sort by the 'MasterRank' column.")
-        print("3. Select all cards and use 'Cards -> Reposition'.")
-    else:
-        # This part is skipped but left for clarity.
-        print("\nUPDATE_CARD_DUE is True, but this installation does not support automated repositioning.")
+    deck_disjunction = " OR ".join([f'deck:"{d}"' for d in DECK_NAMES])
+    print("\n[SUCCESS] Script finished. Now, please reposition cards manually in Anki.")
+    print(f"Paste this in your browser: is:new ({deck_disjunction})")
+    print("2. Sort by the 'MasterRank' column.")
+    print("3. Select all cards and use 'Cards -> Reposition'.")
 
 
 if __name__ == "__main__":
