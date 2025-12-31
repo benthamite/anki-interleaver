@@ -119,6 +119,10 @@ processed.
    - Randomize order: unchecked
    - Shift positions of existing cards: unchecked
 
+## cleanup
+
+If you are happy with the new ordering, you can delete the `MasterRank` field.
+
 ## notes on ordering
 
 ### per-deck order
