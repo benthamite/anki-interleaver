@@ -123,7 +123,7 @@ def main():
             if nid not in note_to_update or rank < note_to_update[nid]:
                 note_to_update[nid] = rank
     
-    print(f"Updating {len(note_to_update)} notes one-by-one (this may take a moment)...")
+    print(f"Updating {len(note_to_update)} notes one-by-one (this may take a while)...")
     updated_count = 0
     total_to_update = len(note_to_update)
     for nid, rank in note_to_update.items():
