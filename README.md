@@ -121,48 +121,6 @@ processed.
 
 If you are happy with the new ordering, you can delete the `MasterRank` field.
 
-## notes on ordering
-
-### per-deck order
-
-The script uses Anki’s existing new-card order per deck. Concretely, it queries
-for `is:new` cards in each deck via AnkiConnect and uses the returned order as
-the deck’s internal order.
-
-If you want a different per-deck order, you should set that order in Anki first
-(e.g. via the Browser and “Reposition”) and then re-run the script.
-
-### interleaving strategy
-
-If deck A has `nA` new cards and deck B has `nB` new cards, the script aims to
-emit cards such that, at any point in the combined sequence, each deck has had
-approximately the same fraction of its new cards scheduled.
-
-This generalizes to any number of decks.
-
-## troubleshooting
-
-### “AnkiConnect error: ...”
-
-- Confirm Anki is open
-- Confirm AnkiConnect is installed and enabled
-- Confirm AnkiConnect is listening on `http://127.0.0.1:8765`
-
-### cards are missing / ranks look wrong
-
-- Verify the cards are *new* (`is:new`)
-- Verify those notes’ note types contain the `MasterRank` field
-- If you have multiple cards per note, `MasterRank` is written on the note;
-  multiple cards of the same note will share that value.
-
-### i can’t see `MasterRank` in the browser
-
-You almost certainly did not add the `MasterRank` field to the note type(s)
-being displayed.
-
-If you’re browsing multiple note types at once, ensure the note type(s) used by
-the target decks include a `MasterRank` field.
-
 ## license
 
 MIT
