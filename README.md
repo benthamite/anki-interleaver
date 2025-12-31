@@ -65,20 +65,13 @@ DECK_NAMES = [
 
 ### create the `MasterRank` note field
 
-In Anki:
-
-1. Open **Browse**
-2. Select a note of the note type(s) you use in the target decks
+1. In Anki, go to Tools > Manage Note Types
+2. Select a note type used by one of the decks you listed above
 3. Click **Fields...**
 4. Click **Add**
 5. Name it `MasterRank`
 6. Check the "Sort by this field in the browser" option.
-6. Repeat for each note type used by the decks listed in the previous step.
-
-You can also locate the note types from Tools > Manage Note Types.
-
-Note: if the field is missing from a relevant note type, the script will inform
-you and exit without making changes.
+7. Repeat steps 2–6 until all relevant note types have the `MasterRank` field.
 
 ## usage
 
