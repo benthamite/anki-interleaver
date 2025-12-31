@@ -106,8 +106,8 @@ processed.
 1. In the main Anki window, click **Browse**.
 2. Search for all new cards within the decks you interleaved. Example:
 
-   `is:new (deck:"Main::Japanese" or deck:"Main::Swedish")`
-   
+   `is:new (deck:"Main::Japanese" OR deck:"Main::Swedish")`
+
    (The script will output the exact text you need to paste.)
 3. Sort the cards by 'Sort Field' (if it doesn't show up, right-click on the column
    headers and enable it).
