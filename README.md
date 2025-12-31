@@ -80,13 +80,8 @@ In Anki:
 
 ### backup (recommended)
 
-Before running the script on a large collection, make a backup of your Anki
-collection:
-
-1. In Anki, go to **File → Export…**
-2. Choose **Anki Deck Package (*.apkg)**
-3. Check **Include scheduling information**
-4. Export to a safe location
+Before running the script on a large collection, make a backup: in Anki, go to
+**File → Create Backup** and select a location for the backup file.
 
 ### run the script
 
