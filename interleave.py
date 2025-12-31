@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+import subprocess
 import requests
 import sys
 
@@ -131,8 +133,48 @@ def main():
 
     # Step 4: Remind user to reposition manually.
     deck_disjunction = " OR ".join([f'deck:"{d}"' for d in DECK_NAMES])
-    print("\n[SUCCESS] Script finished. Please following the instructions in the \"apply the order in Anki\" section of theREADME file. The text you need to paste in the search bar of the note browser has been copied to the clipboard:")
-    print(f"is:new ({deck_disjunction})")
+    browser_query = f"is:new ({deck_disjunction})"
+    copy_to_clipboard(browser_query)
+    print(
+        "\n[SUCCESS] Script finished. Follow the instructions in the "
+        '"apply the order in Anki" section of the README. The text you need to '
+        "paste in the search bar of the note browser has been copied to the clipboard:"
+    )
+    print(browser_query)
+
+
+def copy_to_clipboard(text):
+    """Copy text to the system clipboard or raise if unsupported."""
+    if sys.platform == "darwin":
+        _copy_to_clipboard_with_command(["pbcopy"], text)
+        return
+    if os.name == "nt":
+        _copy_to_clipboard_with_command(["clip"], text)
+        return
+
+    for cmd in (
+        ["wl-copy"],
+        ["xclip", "-selection", "clipboard"],
+        ["xsel", "--clipboard", "--input"],
+    ):
+        try:
+            _copy_to_clipboard_with_command(cmd, text)
+            return
+        except FileNotFoundError:
+            continue
+
+    raise RuntimeError(
+        "Could not copy to clipboard: install wl-clipboard (Wayland) or xclip/xsel (X11), "
+        "or copy the printed query manually"
+    )
+
+
+def _copy_to_clipboard_with_command(command, text):
+    """Copy text using command, raising on failure."""
+    p = subprocess.Popen(command, stdin=subprocess.PIPE)
+    p.communicate(input=text.encode("utf-8"))
+    if p.returncode != 0:
+        raise RuntimeError(f"Clipboard command failed: {' '.join(command)}")
 
 
 if __name__ == "__main__":
