@@ -18,18 +18,6 @@ The resulting interleaving will be approximately 2:1:
 
 - D1[1], D1[2], D2[1], D1[3], D1[4], D2[2]
 
-## what the script does
-
-At a high level, `interleave.py`:
-
-1. Pulls the list of *new cards* in each selected deck via AnkiConnect.
-2. Uses the order Anki already assigns to new cards in each deck (“new card
-   position”, i.e. the internal new-card ordering) as the deck’s internal order.
-3. Builds a combined schedule that tries to keep each deck “on pace” according
-   to its share of total new cards.
-4. Repositions each new card directly by setting its “due” number via
-   AnkiConnect.
-
 ## requirements
 
 - Desktop Anki
