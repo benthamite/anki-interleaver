@@ -18,37 +18,20 @@ The resulting interleaving will be approximately 2:1:
 
 - D1[1], D1[2], D2[1], D1[3], D1[4], D2[2]
 
-## requirements
+## setup (one-time)
+
+### install any missing requirements
 
 - Desktop Anki
 - [AnkiConnect](https://foosoft.net/projects/anki-connect/) installed and enabled
 - Python 3
 - Python dependency: `requests`
 
-## setup (one-time)
-
 ### clone the repo
 
 ```bash
 git clone https://github.com/tlon-team/anki-interleaver
 ```
-
-### configure the Python script
-
-Open `interleave.py` and set the list of deck names:
-
-- `DECK_NAMES`: exact deck names as shown in Anki (including `Parent::Child`
-  notation if applicable)
-
-Example:
-
-```python
-DECK_NAMES = [
-    "Main::Japanese",
-    "Main::Swedish",
-]
-```
-
 
 ## usage
 
@@ -66,7 +49,7 @@ Before running the script on a large collection, make a backup: in Anki, go to
 python interleave.py
 ```
 
-When it finishes, the new cards in the selected decks will have been repositioned.
+3. Follow the prompts.
 
 ## license
 
