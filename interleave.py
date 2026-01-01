@@ -4,14 +4,6 @@ import sys
 
 ANKI_CONNECT_URL = "http://127.0.0.1:8765"
 
-# ---------- CONFIG: matches your setup ----------
-
-# Put your real deck names here.
-DECK_NAMES = [
-    "deck1",
-    "deck2",
-]
-
 # ------------------------------------------------
 
 
@@ -30,29 +22,47 @@ def anki_invoke(action, **params):
 
 
 def main():
-    if not DECK_NAMES:
-        print("DECK_NAMES is empty; edit the script.", file=sys.stderr)
-        sys.exit(1)
-
     print("Connecting to AnkiConnect...")
 
-    # Preflight: ensure the decks exist.
-    print("\n--- Preflight: checking decks exist ---")
-    deck_names_in_anki = set(anki_invoke("deckNames"))
-    missing_decks = [d for d in DECK_NAMES if d not in deck_names_in_anki]
-    if missing_decks:
-        missing = ", ".join(missing_decks)
-        raise RuntimeError(
-            f"Deck(s) not found in Anki: {missing}. "
-            "Fix DECK_NAMES (must match exactly) and re-run."
-        )
+    all_decks = sorted(anki_invoke("deckNames"))
+    if not all_decks:
+        print("No decks found in Anki.", file=sys.stderr)
+        sys.exit(1)
+
+    print("\nAvailable decks:")
+    for i, name in enumerate(all_decks, 1):
+        print(f"  {i}: {name}")
+
+    selected_deck_names = []
+    while True:
+        user_input = input("\nEnter the numbers of the decks to interleave (e.g. '1 3 4'): ")
+        try:
+            indices = [int(i.strip()) - 1 for i in user_input.split()]
+            if not indices:
+                print("Please select at least one deck.", file=sys.stderr)
+                continue
+
+            # Check for out-of-bounds indices
+            if any(i < 0 or i >= len(all_decks) for i in indices):
+                print("One or more numbers are outside the valid range. Please try again.", file=sys.stderr)
+                continue
+
+            # Check for duplicates
+            if len(set(indices)) != len(indices):
+                print("Duplicate deck numbers are not allowed. Please try again.", file=sys.stderr)
+                continue
+
+            selected_deck_names = [all_decks[i] for i in indices]
+            break
+        except ValueError:
+            print("Invalid input. Please enter only the numbers corresponding to the decks, separated by spaces.", file=sys.stderr)
 
 
     # Step 1: For each deck, get its list of new cards in their default Anki order.
     processed_decks = []
     total_new = 0
     print("\n--- Finding New Cards in Decks ---")
-    for name in DECK_NAMES:
+    for name in selected_deck_names:
         query = f'deck:"{name}" is:new'
         # findCards returns cards sorted by due number, which is the natural new card order.
         ordered_cids = anki_invoke("findCards", query=query)
