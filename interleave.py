@@ -41,6 +41,17 @@ def main():
 
     print("Connecting to AnkiConnect...")
 
+    # Preflight: ensure the decks exist.
+    print("\n--- Preflight: checking decks exist ---")
+    deck_names_in_anki = set(anki_invoke("deckNames"))
+    missing_decks = [d for d in DECK_NAMES if d not in deck_names_in_anki]
+    if missing_decks:
+        missing = ", ".join(missing_decks)
+        raise RuntimeError(
+            f"Deck(s) not found in Anki: {missing}. "
+            "Fix DECK_NAMES (must match exactly) and re-run."
+        )
+
     # Preflight: ensure the MasterRank field exists on all note types used in the
     # relevant decks before doing any updates.
     print(f"\n--- Preflight: checking '{MASTERRANK_FIELD}' field exists ---")
