@@ -27,10 +27,8 @@ At a high level, `interleave.py`:
    position”, i.e. the internal new-card ordering) as the deck’s internal order.
 3. Builds a combined schedule that tries to keep each deck “on pace” according
    to its share of total new cards.
-4. Writes a `MasterRank` value (a note field you create) to each note so you can
-   sort in the Anki browser.
-5. You then perform the final “Cards → Reposition…” step manually in Anki,
-   sorted by `MasterRank`.
+4. Repositions each new card directly by setting its “due” number via
+   AnkiConnect.
 
 ## requirements
 
@@ -63,15 +61,6 @@ DECK_NAMES = [
 ]
 ```
 
-### create the `MasterRank` note field
-
-1. In Anki, go to Tools > Manage Note Types
-2. Select a note type used by one of the decks you listed above
-3. Click **Fields**
-4. Click **Add**
-5. Name it `MasterRank`
-6. Check the "Sort by this field in the browser" option.
-7. Repeat steps 2–6 until all relevant note types have the `MasterRank` field.
 
 ## usage
 
@@ -89,31 +78,7 @@ Before running the script on a large collection, make a backup: in Anki, go to
 python interleave.py
 ```
 
-When it finishes, it will have updated the `MasterRank` field on the notes it
-processed.
-
-### apply the order in Anki
-
-1. In the main Anki window, click **Browse**.
-2. Search for all new cards within the decks you interleaved. Example:
-
-   `is:new (deck:"Main::Japanese" OR deck:"Main::Swedish")`
-
-   (The script will output and copy to the clipboard the exact text you need to
-   paste.)
-3. Sort the cards by 'Sort Field' (if it doesn't show up, right-click on the column
-   headers and enable it).
-4. Select all cards (Cmd/Ctrl + A).
-5. Choose **Cards → Reposition…**
-6. Use:
-   - Start position: `1`
-   - Step: `1`
-   - Randomize order: unchecked
-   - Shift positions of existing cards: unchecked
-
-## cleanup
-
-If you are happy with the new ordering, you can delete the `MasterRank` field.
+When it finishes, the new cards in the selected decks will have been repositioned.
 
 ## license
 

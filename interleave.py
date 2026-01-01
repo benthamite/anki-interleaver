@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import os
-import subprocess
 import requests
 import sys
 
@@ -13,9 +11,6 @@ DECK_NAMES = [
     "deck1",
     "deck2",
 ]
-
-# The field to write the final global order into.
-MASTERRANK_FIELD = "MasterRank"
 
 # ------------------------------------------------
 
@@ -52,32 +47,6 @@ def main():
             "Fix DECK_NAMES (must match exactly) and re-run."
         )
 
-    # Preflight: ensure the MasterRank field exists on all note types used in the
-    # relevant decks before doing any updates.
-    print(f"\n--- Preflight: checking '{MASTERRANK_FIELD}' field exists ---")
-    decks_query = " or ".join([f'deck:"{d}"' for d in DECK_NAMES])
-    note_ids = anki_invoke("findNotes", query=decks_query)
-    if not note_ids:
-        print("No notes found in the specified decks.")
-        sys.exit(0)
-
-    notes_info = anki_invoke("notesInfo", notes=note_ids)
-
-    models_missing_field = set()
-    for note in notes_info:
-        model_name = note.get("modelName")
-        fields = note.get("fields", {})
-        if model_name and MASTERRANK_FIELD not in fields:
-            models_missing_field.add(model_name)
-
-    if models_missing_field:
-        missing = ", ".join(sorted(models_missing_field))
-        raise RuntimeError(
-            f"Missing required note field '{MASTERRANK_FIELD}' on note types: {missing}. "
-            "Add the field in Anki (Browse → select a note → Fields… → Add) and re-run."
-        )
-
-    print(f"OK: '{MASTERRANK_FIELD}' exists on all relevant note types.")
 
     # Step 1: For each deck, get its list of new cards in their default Anki order.
     processed_decks = []
@@ -115,77 +84,26 @@ def main():
         indexes[best_deck_idx] += 1
     print("Global schedule computed.")
 
-    # Step 3: Write MasterRank to notes. This requires mapping cards back to their notes.
-    # We build a map of Card ID -> Note ID. This is robust against broken cardsInfo.
-    print("Building Card ID to Note ID map...")
-
-    cid_to_nid_map = {}
-    for note in notes_info:
-        for cid in note.get('cards', []):
-            cid_to_nid_map[cid] = note['noteId']
-
-    # Determine the final rank for each note.
-    note_to_update = {}
-    for cid, rank in global_order:
-        nid = cid_to_nid_map.get(cid)
-        if nid:
-            if nid not in note_to_update or rank < note_to_update[nid]:
-                note_to_update[nid] = rank
-    
-    print(f"Updating {len(note_to_update)} notes one-by-one (this may take a while)...")
+    # Step 3: Reposition new cards directly via AnkiConnect.
+    print(f"\nRepositioning {len(global_order)} new cards (this may take a while)...")
     updated_count = 0
-    total_to_update = len(note_to_update)
-    for nid, rank in note_to_update.items():
-        payload = {"note": {"id": nid, "fields": {MASTERRANK_FIELD: str(rank)}}}
-        anki_invoke("updateNoteFields", **payload)
+    total_to_update = len(global_order)
+    for cid, rank in global_order:
+        # Card positions are 1-indexed.
+        new_position = rank + 1
+        anki_invoke(
+            "setSpecificValueOfCard",
+            card=cid,
+            keys=["due"],
+            newValues=[new_position],
+        )
         updated_count += 1
         print(f"\r  Progress: {updated_count}/{total_to_update}", end="")
-    print("\nMasterRank field updated.")
+    print("\nNew cards repositioned.")
 
-    # Step 4: Remind user to reposition manually.
-    deck_disjunction = " OR ".join([f'deck:"{d}"' for d in DECK_NAMES])
-    browser_query = f"is:new ({deck_disjunction})"
-    copy_to_clipboard(browser_query)
-    print(
-        "\n[SUCCESS] Script finished. Follow the instructions in the "
-        '"apply the order in Anki" section of the README. The text you need to '
-        "paste in the search bar of the note browser has been copied to the clipboard:"
-    )
-    print(browser_query)
+    print("\n[SUCCESS] Script finished. New cards have been repositioned.")
 
 
-def copy_to_clipboard(text):
-    """Copy text to the system clipboard or raise if unsupported."""
-    if sys.platform == "darwin":
-        _copy_to_clipboard_with_command(["pbcopy"], text)
-        return
-    if os.name == "nt":
-        _copy_to_clipboard_with_command(["clip"], text)
-        return
-
-    for cmd in (
-        ["wl-copy"],
-        ["xclip", "-selection", "clipboard"],
-        ["xsel", "--clipboard", "--input"],
-    ):
-        try:
-            _copy_to_clipboard_with_command(cmd, text)
-            return
-        except FileNotFoundError:
-            continue
-
-    raise RuntimeError(
-        "Could not copy to clipboard: install wl-clipboard (Wayland) or xclip/xsel (X11), "
-        "or copy the printed query manually"
-    )
-
-
-def _copy_to_clipboard_with_command(command, text):
-    """Copy text using command, raising on failure."""
-    p = subprocess.Popen(command, stdin=subprocess.PIPE)
-    p.communicate(input=text.encode("utf-8"))
-    if p.returncode != 0:
-        raise RuntimeError(f"Clipboard command failed: {' '.join(command)}")
 
 
 if __name__ == "__main__":
